@@ -51,31 +51,18 @@
 
 ## Architecture
 
-```
-                    ┌─────────────────────────────────────────┐
-                    │          PubSub.Templator                │
-                    │  Génère des projets consommateurs        │
-                    │  (YAML → Makefile, Docker, agents...)    │
-                    └──────────────┬──────────────────────────┘
-                                   │
-┌──────────────────┐    ┌──────────▼──────────┐    ┌──────────────────────┐
-│  PubSub.Client   │◄──►│   PubSub.Server     │◄───│ DevTools.Consumers   │
-│  (Py / Rust)     │    │   (Py / Rust)       │    │ (record / replay)    │
-│  · PyPI package  │    │   · WebSocket       │    └──────────────────────┘
-│  · Reconnexion   │    │   · Topics/Broadcast│
-│  · Pydantic      │    │   · Persistance     │
-└──────────────────┘    └──────────┬──────────┘
-                         ┌─────────┴─────────┐
-                         │                   │
-                   ┌─────▼─────┐       ┌─────▼─────┐
-                   │SQLite.Async│       │JSONL.Async │
-                   │(Py / Rust) │       │(Py / Rust) │
-                   └─────┬─────┘       └────────────┘
-                         │
-                   ┌─────▼──────────┐
-                   │Threadsafe.Logger│
-                   │(multi-backends) │
-                   └────────────────┘
+```mermaid
+graph TD
+    T[PubSub.Templator<br/><i>Génère des projets consommateurs</i>] --> S
+
+    C[PubSub.Client<br/><i>Py / Rust · PyPI · Pydantic</i>] <--> S[PubSub.Server<br/><i>Py / Rust · WebSocket · Topics</i>]
+    D[DevTools.Consumers<br/><i>Record / Replay</i>] --> S
+
+    S --> SQ[SQLite.Async<br/><i>Py / Rust</i>]
+    S --> JL[JSONL.Async<br/><i>Py / Rust</i>]
+
+    SQ --> L[Threadsafe.Logger<br/><i>Multi-backends</i>]
+    JL --> L
 ```
 
 ## Principes
