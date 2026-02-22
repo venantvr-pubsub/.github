@@ -65,6 +65,10 @@ graph TD
     JL --> L
 ```
 
+## Stack
+
+[![Stack](https://skillicons.dev/icons?i=python,rust,rabbitmq,docker,redis,linux,git&theme=dark)](https://skillicons.dev)
+
 ## Principes
 
 - **Dual-language** : chaque composant existe en Python et en Rust avec la même API
